@@ -1,9 +1,25 @@
-import { FC, memo } from 'react';
+import { FC, memo, useEffect } from 'react';
 
-import { OrdersListProps } from './type';
 import { OrdersListUI } from '@ui';
+import { useDispatch, useSelector } from 'react-redux';
 
-export const OrdersList: FC<OrdersListProps> = memo(({ orders }) => {
+import { fetchOrders } from '../../utils/slices/ordersSlice';
+import { TOrder } from '@utils-types';
+import { RootState, AppDispatch } from '../../services/store';
+
+export const OrdersList: FC = memo(() => {
+  const dispatch = useDispatch<AppDispatch>();
+  const { orders, loading, error } = useSelector(
+    (state: RootState) => state.orders
+  );
+
+  useEffect(() => {
+    dispatch(fetchOrders());
+  }, [dispatch]);
+
+  if (loading) return <p>Загрузка...</p>;
+  if (error) return <p>{error}</p>;
+
   const orderByDate = [...orders].sort(
     (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
   );
