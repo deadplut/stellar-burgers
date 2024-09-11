@@ -4,7 +4,6 @@ import { OrdersListUI } from '@ui';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { fetchOrders } from '../../utils/slices/ordersSlice';
-import { TOrder } from '@utils-types';
 import { RootState, AppDispatch } from '../../services/store';
 
 export const OrdersList: FC = memo(() => {

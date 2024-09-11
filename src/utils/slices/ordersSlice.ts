@@ -20,7 +20,7 @@ export const fetchOrders = createAsyncThunk(
     try {
       return await getOrdersApi();
     } catch (error) {
-      return rejectWithValue('Не удалось загрузить заказы');
+      return rejectWithValue('Не удалось загрузить заказы.');
     }
   }
 );
