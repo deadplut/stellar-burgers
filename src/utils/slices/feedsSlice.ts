@@ -4,12 +4,16 @@ import { getFeedsApi } from '@api';
 
 interface FeedState {
   orders: TOrder[];
+  total: number;
+  totalToday: number;
   loading: boolean;
   error: string | null;
 }
 
 const initialState: FeedState = {
   orders: [],
+  total: 0,
+  totalToday: 0,
   loading: false,
   error: null
 };
@@ -37,7 +41,9 @@ const feedsSlice = createSlice({
       })
       .addCase(fetchIngredients.fulfilled, (state, action) => {
         state.loading = false;
-        state.orders = action.payload;
+        state.orders = action.payload.orders;
+        state.total = action.payload.total;
+        state.totalToday = action.payload.totalToday;
       })
       .addCase(fetchIngredients.rejected, (state, action) => {
         state.loading = false;

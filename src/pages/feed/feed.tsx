@@ -1,15 +1,30 @@
 import { Preloader } from '@ui';
 import { FeedUI } from '@ui-pages';
 import { TOrder } from '@utils-types';
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
+import { useDispatch, useSelector } from '../../services/store';
+import { fetchIngredients } from '../../utils/slices/ingredientsSlice';
+import { fetchOrders } from '../../utils/slices/ordersSlice';
+import styles from '../constructor-page/constructor-page.module.css';
+import { BurgerConstructor, BurgerIngredients } from '@components';
 
 export const Feed: FC = () => {
-  /** TODO: взять переменную из стора */
-  const orders: TOrder[] = [];
+  const dispatch = useDispatch();
 
-  if (!orders.length) {
-    return <Preloader />;
-  }
+  useEffect(() => {
+    dispatch(fetchOrders());
+  }, [dispatch]);
 
-  <FeedUI orders={orders} handleGetFeeds={() => {}} />;
+  const orders: TOrder[] = useSelector((state) => state.feedOrders.orders);
+  const isIngredientsLoading = useSelector((state) => state.feedOrders.loading);
+
+  return (
+    <>
+      {isIngredientsLoading ? (
+        <Preloader />
+      ) : (
+        <FeedUI orders={orders} handleGetFeeds={() => {}} />
+      )}
+    </>
+  );
 };
