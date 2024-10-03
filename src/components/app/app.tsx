@@ -16,11 +16,13 @@ import { AppHeader, Modal, OrderInfo } from '@components';
 import {
   createBrowserRouter,
   createRoutesFromElements,
-  Navigate,
+  Navigate, Outlet,
   Route,
   RouteProps,
   RouterProvider
 } from 'react-router-dom';
+import { RootState } from '../../services/store';
+import { useSelector } from 'react-redux';
 
 const App = () => (
   <div className={styles.app}>
@@ -28,12 +30,20 @@ const App = () => (
     <RouterProvider router={router} />
   </div>
 );
-const isAuthenticated = true;
+const isAuthenticated = false;
+// const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
+
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
       <Route path='/' element={<ConstructorPage />} />
       <Route path='/feed' element={<Feed />} />
+      <Route path='/feed/:number' element={
+        <Modal onClose={()=> window.history.back()} title='Order Info'>
+          <OrderInfo />
+        </Modal>
+      }
+             />
       <Route path='/login' element={<Login />} />
       <Route path='/register' element={<Register />} />
       <Route path='/forgot-password' element={<ForgotPassword />} />
@@ -48,7 +58,7 @@ const router = createBrowserRouter(
         <Route
           path='/profile/orders/:number'
           element={
-            <Modal onClose={() => window.history.back()} title='ass_task'>
+            <Modal onClose={() => window.history.back()} title='Order Info'>
               <OrderInfo />
             </Modal>
           }
@@ -67,14 +77,9 @@ interface PrivateRouteProps extends RouteProps {
 
 function PrivateRoute({
   isAuthenticated,
-  redirectTo,
-  ...rest
+  redirectTo
 }: PrivateRouteProps) {
-  if (!isAuthenticated) {
-    return <Navigate to={redirectTo} replace />;
-  }
-
-  return <Route {...rest} />;
+  return isAuthenticated ? <Outlet /> : <Navigate to={redirectTo} replace />;
 }
 
 export default App;
