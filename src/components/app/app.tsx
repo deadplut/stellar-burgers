@@ -16,7 +16,8 @@ import { AppHeader, Modal, OrderInfo } from '@components';
 import {
   createBrowserRouter,
   createRoutesFromElements,
-  Navigate, Outlet,
+  Navigate,
+  Outlet,
   Route,
   RouteProps,
   RouterProvider
@@ -38,12 +39,14 @@ const router = createBrowserRouter(
     <>
       <Route path='/' element={<ConstructorPage />} />
       <Route path='/feed' element={<Feed />} />
-      <Route path='/feed/:number' element={
-        <Modal onClose={()=> window.history.back()} title='Order Info'>
-          <OrderInfo />
-        </Modal>
-      }
-             />
+      <Route
+        path='/feed/:number'
+        element={
+          <Modal onClose={() => window.history.back()} title='Order Info'>
+            <OrderInfo />
+          </Modal>
+        }
+      />
       <Route path='/login' element={<Login />} />
       <Route path='/register' element={<Register />} />
       <Route path='/forgot-password' element={<ForgotPassword />} />
@@ -75,10 +78,7 @@ interface PrivateRouteProps extends RouteProps {
   redirectTo: string;
 }
 
-function PrivateRoute({
-  isAuthenticated,
-  redirectTo
-}: PrivateRouteProps) {
+function PrivateRoute({ isAuthenticated, redirectTo }: PrivateRouteProps) {
   return isAuthenticated ? <Outlet /> : <Navigate to={redirectTo} replace />;
 }
 
