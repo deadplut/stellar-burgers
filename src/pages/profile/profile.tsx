@@ -1,12 +1,18 @@
 import { ProfileUI } from '@ui-pages';
 import { FC, SyntheticEvent, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from '../../services/store';
+import { fetchIngredients } from '../../utils/slices/ingredientsSlice';
+import { fetchUser } from '../../utils/slices/userSlice';
 
 export const Profile: FC = () => {
-  /** TODO: взять переменную из стора */
-  const user = {
-    name: '',
-    email: ''
-  };
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchUser());
+  }, [dispatch]);
+
+  const user = useSelector((state) => state.user.user);
+  /** TODO (сделано): взять переменную из стора */
 
   const [formValue, setFormValue] = useState({
     name: user.name,

@@ -48,7 +48,7 @@ const router = createBrowserRouter(
         <Route
           path='/profile/orders/:number'
           element={
-            <Modal onClose={() => window.history.back()} title='ass'>
+            <Modal onClose={() => window.history.back()} title='ass_task'>
               <OrderInfo />
             </Modal>
           }
