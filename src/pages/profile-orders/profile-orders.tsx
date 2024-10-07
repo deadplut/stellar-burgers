@@ -1,17 +1,25 @@
 import { ProfileOrdersUI } from '@ui-pages';
-import { TOrder } from '@utils-types';
 import { FC, useEffect } from 'react';
-import { fetchOrders } from '../../utils/slices/ordersSlice';
-import { useDispatch, useSelector } from '../../services/store';
+import {
+  fetchIngredients,
+  fetchUserOrders,
+  removeUserOrders,
+  selectUserOrders
+} from '../../slices/stellarBurgerSlice';
+import { Preloader } from '@ui';
+import { useAppSelector, useAppDispatch } from '../../services/store';
 
 export const ProfileOrders: FC = () => {
-  const dispatch = useDispatch();
-
+  const dispatch = useAppDispatch();
   useEffect(() => {
-    dispatch(fetchOrders());
-  }, [dispatch]);
+    dispatch(removeUserOrders());
+    Promise.all([dispatch(fetchIngredients()), dispatch(fetchUserOrders())]);
+  }, []);
+  const orders = useAppSelector(selectUserOrders);
 
-  const orders: TOrder[] = useSelector((state) => state.feedOrders.orders);
+  if (!orders) {
+    return <Preloader />;
+  }
 
   return <ProfileOrdersUI orders={orders} />;
 };
