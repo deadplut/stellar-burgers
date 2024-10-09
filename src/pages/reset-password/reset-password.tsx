@@ -1,8 +1,8 @@
 import { FC, SyntheticEvent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { resetPasswordApi } from '@api';
-import { ResetPasswordUI } from '@ui-pages';
+import { resetPasswordApi } from '../../utils/burger-api';
+import { ResetPasswordUI } from '../../components/ui/pages';
 
 export const ResetPassword: FC = () => {
   const navigate = useNavigate();
@@ -12,6 +12,10 @@ export const ResetPassword: FC = () => {
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
+    /*
+      Здесь допускается не использовать redux для
+      выполнения запроса
+    */
     setError(null);
     resetPasswordApi({ password, token })
       .then(() => {
