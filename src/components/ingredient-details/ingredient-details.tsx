@@ -1,23 +1,14 @@
-import { FC, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useSelector } from '../../services/store';
+import { IngredientDetailsUI, Preloader } from '../ui';
+import { FC } from 'react';
 import { useParams } from 'react-router-dom';
-import { IngredientDetailsUI } from '../ui/ingredient-details';
-import { Preloader } from '../ui/preloader';
-import { selectIngredients } from '../../slices/stellarBurgerSlice';
-import { useAppSelector } from '../../services/store';
 
 export const IngredientDetails: FC = () => {
-  const navigate = useNavigate();
-  const params = useParams<{ id: string }>();
+  const { id } = useParams<{ id: string }>();
 
-  useEffect(() => {
-    if (!params.id) {
-      navigate('/', { replace: true });
-    }
-  }, []);
-
-  const ingredients = useAppSelector(selectIngredients);
-  const ingredientData = ingredients.find((item) => item._id === params.id);
+  const ingredientData = useSelector((state) =>
+    state.ingredients.data.find((ingredient) => ingredient._id === id)
+  );
 
   if (!ingredientData) {
     return <Preloader />;

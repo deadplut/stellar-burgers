@@ -1,28 +1,27 @@
-import { FC, useMemo } from 'react';
-import { Preloader } from '../ui/preloader';
-import { OrderInfoUI } from '../ui/order-info';
-import { TIngredient } from '@utils-types';
-import { useParams, redirect } from 'react-router-dom';
-import { useAppSelector } from '../../services/store';
-import {
-  selectOrders,
-  selectIngredients
-} from '../../slices/stellarBurgerSlice';
+import { FC, useEffect, useMemo } from 'react';
+
+import { TIngredient } from '../../utils/types';
+import { useDispatch, useSelector } from '../../services/store';
+import { OrderInfoUI, Preloader } from '../ui';
+import { useParams } from 'react-router-dom';
+import { fetchOrder } from '../../services/slices';
 
 export const OrderInfo: FC = () => {
-  const params = useParams<{ number: string }>();
-  if (!params.number) {
-    redirect('/feed');
-    return null;
-  }
+  const dispatch = useDispatch();
 
-  const orders = useAppSelector(selectOrders);
+  const { number } = useParams<{ number: string }>();
 
-  const orderData = orders.find(
-    (item) => item.number === parseInt(params.number!)
+  const { isLoading: isIngredientsLoading, data: ingredients } = useSelector(
+    (state) => state.ingredients
   );
 
-  const ingredients: TIngredient[] = useAppSelector(selectIngredients);
+  const { isOrderLoading, orderModalData: orderData } = useSelector(
+    (state) => state.orders
+  );
+
+  useEffect(() => {
+    dispatch(fetchOrder(Number(number)));
+  }, [dispatch]);
 
   /* Готовим данные для отображения */
   const orderInfo = useMemo(() => {
@@ -66,8 +65,12 @@ export const OrderInfo: FC = () => {
     };
   }, [orderData, ingredients]);
 
-  if (!orderInfo) {
+  if (isIngredientsLoading || isOrderLoading) {
     return <Preloader />;
+  }
+
+  if (!orderInfo) {
+    return null;
   }
 
   return <OrderInfoUI orderInfo={orderInfo} />;

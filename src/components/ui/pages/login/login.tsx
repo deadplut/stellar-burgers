@@ -16,6 +16,9 @@ export const LoginUI: FC<LoginUIProps> = ({
   password,
   setPassword
 }) => (
+  /*
+    Отображение ошибок и валидация форм в "можно лучше"
+  */
   <main className={styles.container}>
     <div className={`pt-6 ${styles.wrapCenter}`}>
       <h3 className='pb-6 text text_type_main-medium'>Вход</h3>
@@ -29,7 +32,7 @@ export const LoginUI: FC<LoginUIProps> = ({
             <Input
               type='email'
               placeholder='E-mail'
-              onChange={setEmail}
+              onChange={(e) => setEmail(e.target.value)}
               value={email}
               name='email'
               error={false}
@@ -39,7 +42,7 @@ export const LoginUI: FC<LoginUIProps> = ({
           </div>
           <div className='pb-6'>
             <PasswordInput
-              onChange={setPassword}
+              onChange={(e) => setPassword(e.target.value)}
               value={password}
               name='password'
             />

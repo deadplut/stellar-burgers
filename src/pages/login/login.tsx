@@ -1,50 +1,38 @@
-import { FC, SyntheticEvent, useEffect } from 'react';
-import { LoginUI } from '@ui-pages';
-import { fetchLoginUser, selectLoading } from '../../slices/stellarBurgerSlice';
-import { useAppDispatch, useAppSelector } from '../../services/store';
-import { useForm } from '../../hooks/useForm';
-import {
-  selectErrorText,
-  removeErrorText
-} from '../../slices/stellarBurgerSlice';
-import { Preloader } from '@ui';
-import { setCookie } from '../../utils/cookie';
+import { FC, SyntheticEvent, useState } from 'react';
+import { LoginUI } from '../../components/ui/pages';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from '../../services/store';
+import { login } from '../../services/slices';
 
 export const Login: FC = () => {
-  const dispatch = useAppDispatch();
-  const { values, handleChange } = useForm({
-    email: '',
-    password: ''
-  });
-  const error = useAppSelector(selectErrorText);
-  const isLoading = useAppSelector(selectLoading);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  useEffect(() => {
-    dispatch(removeErrorText());
-  }, []);
+  const { from } = location.state || { from: { pathname: '/' } };
 
-  const handleSubmit = (e: SyntheticEvent) => {
+  const { loginError } = useSelector((state) => state.user);
+
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
-    dispatch(removeErrorText());
-    dispatch(fetchLoginUser(values))
-      .unwrap()
-      .then((payload) => {
-        setCookie('accessToken', payload.accessToken);
-        localStorage.setItem('refreshToken', payload.refreshToken);
-      });
-  };
 
-  if (isLoading) {
-    return <Preloader />;
-  }
+    try {
+      await dispatch(login({ email, password })).unwrap();
+
+      navigate(from.pathname, { replace: true });
+    } catch (_) {}
+  };
 
   return (
     <LoginUI
-      errorText={error}
-      email={values.email}
-      setEmail={handleChange}
-      password={values.password}
-      setPassword={handleChange}
+      errorText={loginError?.message}
+      email={email}
+      setEmail={setEmail}
+      password={password}
+      setPassword={setPassword}
       handleSubmit={handleSubmit}
     />
   );

@@ -1,5 +1,5 @@
 import React from 'react';
-import { BurgerIngredientUI } from '@ui';
+import { BurgerIngredientUI } from '../components/ui';
 import type { Meta, StoryObj } from '@storybook/react';
 
 const meta = {
@@ -48,7 +48,6 @@ export const DefaultIngredient: Story = {
         state: null
       }
     },
-    handleAdd: () => {},
-    index: 1
+    handleAdd: () => {}
   }
 };

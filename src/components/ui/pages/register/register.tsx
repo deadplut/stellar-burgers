@@ -18,6 +18,9 @@ export const RegisterUI: FC<RegisterUIProps> = ({
   userName,
   setUserName
 }) => (
+  /*
+    Отображение ошибок и валидация форм в "можно лучше"
+  */
   <main className={styles.container}>
     <div className={`pt-6 ${styles.wrapCenter}`}>
       <h3 className='pb-6 text text_type_main-medium'>Регистрация</h3>
@@ -31,9 +34,9 @@ export const RegisterUI: FC<RegisterUIProps> = ({
             <Input
               type='text'
               placeholder='Имя'
-              onChange={setUserName}
+              onChange={(e) => setUserName(e.target.value)}
               value={userName}
-              name='userName'
+              name='name'
               error={false}
               errorText=''
               size='default'
@@ -43,7 +46,7 @@ export const RegisterUI: FC<RegisterUIProps> = ({
             <Input
               type='email'
               placeholder='E-mail'
-              onChange={setEmail}
+              onChange={(e) => setEmail(e.target.value)}
               value={email}
               name={'email'}
               error={false}
@@ -53,7 +56,7 @@ export const RegisterUI: FC<RegisterUIProps> = ({
           </div>
           <div className='pb-6'>
             <PasswordInput
-              onChange={setPassword}
+              onChange={(e) => setPassword(e.target.value)}
               value={password}
               name='password'
             />

@@ -1,12 +1,11 @@
 import { FC, useState, SyntheticEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useForm } from '../../hooks/useForm';
 
-import { forgotPasswordApi } from '@api';
-import { ForgotPasswordUI } from '@ui-pages';
+import { forgotPasswordApi } from '../../utils/burger-api';
+import { ForgotPasswordUI } from '../../components/ui/pages';
 
 export const ForgotPassword: FC = () => {
-  const { values, handleChange } = useForm({ email: '' });
+  const [email, setEmail] = useState('');
   const [error, setError] = useState<Error | null>(null);
 
   const navigate = useNavigate();
@@ -15,7 +14,7 @@ export const ForgotPassword: FC = () => {
     e.preventDefault();
 
     setError(null);
-    forgotPasswordApi(values)
+    forgotPasswordApi({ email })
       .then(() => {
         localStorage.setItem('resetPassword', 'true');
         navigate('/reset-password', { replace: true });
@@ -26,8 +25,8 @@ export const ForgotPassword: FC = () => {
   return (
     <ForgotPasswordUI
       errorText={error?.message}
-      email={values.email}
-      setEmail={handleChange}
+      email={email}
+      setEmail={setEmail}
       handleSubmit={handleSubmit}
     />
   );
